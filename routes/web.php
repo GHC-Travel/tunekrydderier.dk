@@ -16,7 +16,9 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::view('/', 'welcome')->name('welcome');
-Route::livewire('/{product}', 'product.details')->name('products.show');
+Route::livewire('/checkout', 'cart.checkout')->name('cart.checkout');
+Route::livewire('/checkout/payment', 'cart.checkout.payment')->name('cart.checkout.payment');
+Route::livewire('/details/{product}', 'product.details')->name('products.show');
 
 Route::layout('layouts.auth')->group(function () {
     Route::middleware('guest')->group(function () {

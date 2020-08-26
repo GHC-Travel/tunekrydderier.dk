@@ -37,28 +37,12 @@
                             </span>
                         </div>
                         <div class="hidden sm:ml-6 space-x-8 sm:flex">
-                            <a href="{{ route('welcome') }}"
-                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ Route::is('welcome') ? 'border-orange-500' : 'hover:border-orange-500' }} text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-orange-700 transition duration-150 ease-in-out">
-                                @svg('heroicon-s-shopping-cart')
-                                {{ __('Store') }}
-                            </a>
-
-                            <a href="{{ route('login') }}"
-                                class="inline-flex items-center px-1 pt-1 border-b-2 {{ Route::is('login') ? 'border-orange-500' : 'hover:border-orange-500' }} text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-orange-700 transition duration-150 ease-in-out">
-                                @svg('heroicon-s-login')
-                                {{ __('Sign in') }}
-                            </a>
-
-                            @if (Route::has('register'))
-                                <a href="{{ route('register') }}"
-                                    class="inline-flex items-center px-1 pt-1 border-b-2 {{ Route::is('register') ? 'border-orange-500' : 'hover:border-orange-500' }} text-sm font-medium leading-5 text-gray-900 focus:outline-none focus:border-orange-700 transition duration-150 ease-in-out">
-                                    @svg('heroicon-s-logout')
-                                    {{ __('Register') }}
-                                </a>
-                            @endif
+                            @yield('menu-left')
                         </div>
                     </div>
                     <div class="hidden sm:ml-6 sm:flex sm:items-center">
+                        @yield('menu-right')
+
                         @auth
                             <!-- Profile dropdown -->
                             <div x-data="{ showUserMenu: false }" class="ml-3 relative">
@@ -226,19 +210,19 @@
                                     </li>
                                 </ul>
                             </div>
-                            <div class="mt-12 md:mt-0 flex flex-col">
+                            <div class="mt-12 md:mt-0 flex flex-col text-white">
                                 <p class="flex">
-                                    @svg('heroicon-s-phone')
+                                    @svg('heroicon-s-phone', 'h-6 w-6')
                                     {{ App\CompanyInfo::$phone }}
                                 </p>
 
                                 <p class="flex">
-                                    @svg('heroicon-s-mail')
+                                    @svg('heroicon-s-mail', 'h-6 w-6')
                                     {{ App\CompanyInfo::$email }}
                                 </p>
 
                                 <p class="flex">
-                                    <svg viewBox="0 0 28 29">
+                                    <svg class="h-12 w-12" viewBox="0 0 28 29">
                                         <g fill="none" fill-rule="evenodd" stroke="currentColor" stroke-linecap="round"
                                             stroke-linejoin="round" stroke-width="1.7">
                                             <path d="M17.825 9.95a4 4 0 11-8 .001 4 4 0 018-.001z"></path>

@@ -3,6 +3,7 @@
 namespace App;
 
 use App\Builders\ProductBuilder;
+use App\Enums\ProductStock;
 use Illuminate\Database\Eloquent\Model;
 
 class Product extends Model

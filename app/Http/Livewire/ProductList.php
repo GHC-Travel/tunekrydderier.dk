@@ -3,37 +3,61 @@
 namespace App\Http\Livewire;
 
 use App\Cart;
+use App\Contracts\CurrentCart;
 use App\Product;
 use App\ProductCategory;
 use Livewire\Component;
 
 class ProductList extends Component
 {
-    public string $search = '';
-    public ?string $category = null;
+    use TracksCurrency, TracksSearch;
 
-    protected $updatesQueryString = [
-        'search' => ['except' => '']
+    public bool $showProductOutOfStockAlert = false;
+
+    public ?string $category = null;
+    /**
+     * @var Cart|CurrentCart
+     */
+    public $cart;
+
+    protected $listeners = [
+        'select' => 'selectCategory',
+        'productAddedToCart' => '$refresh',
+        'productStockHit' => 'showProductOutOfStockAlert',
+        'productRemovedFromCart' => '$refresh'
     ];
 
-    protected $listeners = ['select' => 'selectCategory'];
+    public function mount(CurrentCart $cart)
+    {
+        $this->cart = $cart;
+    }
 
     public function selectCategory($category)
     {
         $this->category = $category;
     }
 
-    public function addToCart($productId)
+    public function showProductOutOfStockAlert($productId)
     {
-        $product = Product::findOrFail($productId);
+        $this->showProductOutOfStockAlert = true;
+    }
 
-        Cart::forCurrentUser()->addItem($product);
+    public function addToCart(int $productId)
+    {
+        $product = Product::with('latestPrice')->findOrFail($productId);
+
+        $this->cart
+            ->aggregateRoot()
+            ->addToCart($product)
+            ->persist();
+
+        $this->emit('productAdded', $productId);
     }
 
     public function render()
     {
-        $query = filled($this->category) 
-            ? Product::with('latestPrice')->whereHas('category', fn ($category) => $category->where('name', $this->category))
+        $query = filled($this->category)
+            ? Product::with('latestPrice')->whereHas('category', fn($category) => $category->where('name', $this->category))
             : Product::with('latestPrice');
 
         $query->where('stock', '>', 0);
@@ -41,9 +65,9 @@ class ProductList extends Component
         return view('livewire.product-list', [
             'categories' => ProductCategory::pluck('name'),
 
-            'products' => filled($this->search) 
+            'products' => filled($this->search)
                 ? $query->search($this->search)->paginate()
-                : $query->latest()->paginate()
+                : $query->latest()->paginate(),
         ]);
     }
 }

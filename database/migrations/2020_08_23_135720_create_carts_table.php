@@ -18,6 +18,7 @@ class CreateCartsTable extends Migration
             $table->string('status');
             $table->foreignId('customer_id')->nullable()->constrained('users');
             $table->foreignUuid('event_uuid')->constrained('stored_events', 'aggregate_uuid');
+            $table->decimal('total_cost', 14, 4)->default(0);
             $table->timestamp('abandoned_at')->nullable();
             $table->timestamp('purchased_at')->nullable();
             $table->timestamps();

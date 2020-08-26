@@ -18,7 +18,7 @@
               <div class="absolute mt-1 w-full rounded-md bg-white shadow-lg">
                   <ul tabindex="-1" role="listbox" aria-labelledby="listbox-label"
                       class="max-h-60 rounded-md py-1 text-base leading-6 shadow-xs overflow-auto focus:outline-none sm:text-sm sm:leading-5">
-                      @foreach ($options as $option)
+                      @foreach ($options as $option => $value)
                           <li role="option"
                               class="text-orange-600 cursor-default select-none relative py-2 pl-3 pr-9 group hover:bg-orange-600 hover:text-white"
                               wire:click="$set('selected', '{{ $selected === $option ? null : $option }}')">

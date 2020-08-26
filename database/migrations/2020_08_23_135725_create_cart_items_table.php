@@ -19,7 +19,7 @@ class CreateCartItemsTable extends Migration
             $table->foreignUuid('event_uuid')->constrained('stored_events', 'aggregate_uuid');
             $table->foreignId('product_id')->constrained('products');
             $table->integer('quantity')->default(1);
-            $table->decimal('cost', 8, 4);
+            $table->decimal('cost', 12, 4);
             $table->timestamps();
         });
     }

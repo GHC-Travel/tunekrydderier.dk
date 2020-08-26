@@ -15,11 +15,12 @@ class CreateDeliveriesTable extends Migration
     {
         Schema::create('deliveries', function (Blueprint $table) {
             $table->id();
+            $table->foreignId('delivery_provider_id')->constrained('delivery_providers');
+            $table->string('provider_id')->nullable();
+            $table->foreignId('cart_id')->constrained('carts');
             $table->string('status');
             $table->string('address');
             $table->string('country');
-            $table->string('provider');
-            $table->string('provider_id');
             $table->timestamps();
         });
     }

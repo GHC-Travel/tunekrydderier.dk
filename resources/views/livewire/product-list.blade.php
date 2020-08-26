@@ -1,4 +1,21 @@
 <div class="px-4 py-5 sm:px-6">
+    @if($showProductOutOfStockAlert)
+        <div class="bg-yellow-50 border-l-4 border-yellow-400 p-4">
+            <div class="flex">
+                <div class="flex-shrink-0">
+                    <svg class="h-5 w-5 text-yellow-400" viewBox="0 0 20 20" fill="currentColor">
+                        <path fill-rule="evenodd" d="M8.257 3.099c.765-1.36 2.722-1.36 3.486 0l5.58 9.92c.75 1.334-.213 2.98-1.742 2.98H4.42c-1.53 0-2.493-1.646-1.743-2.98l5.58-9.92zM11 13a1 1 0 11-2 0 1 1 0 012 0zm-1-8a1 1 0 00-1 1v3a1 1 0 002 0V6a1 1 0 00-1-1z" clip-rule="evenodd" />
+                    </svg>
+                </div>
+                <div class="ml-3">
+                    <p class="text-sm leading-5 text-orange-600">
+                        {{ __('A Product has gone out of stock.') }}
+                    </p>
+                </div>
+            </div>
+        </div>
+    @endif
+
     <div
         class="bg-gray-50 -ml-4 -mt-2 flex justify-around flex-wrap sm:flex-no-wrap px-4 py-5 sm:px-6 border-b border-gray-200">
         <div class="ml-4 mt-2 flex-shrink-0">
@@ -47,22 +64,20 @@
                             </dd>
                             <dt class="sr-only">{{ __('Price') }}</dt>
                             <dd class="mt-3">
-                                @foreach ($product->prices as $price)
-                                    <span
-                                        class="{{ $loop->first ? '' : 'mt-2' }} px-2 py-1 text-teal-800 text-xs leading-4 font-medium bg-teal-100 rounded-full flex">
-                                        @svg('heroicon-s-tag', 'h-5 w-5 text-orange-600')
-                                        @money($price->amount, $price->currency)
-                                    </span>
-                                @endforeach
+                                <span
+                                    class="px-2 py-1 text-teal-800 text-xs leading-4 font-medium bg-teal-100 rounded-full flex">
+                                    @svg('heroicon-s-tag', 'h-5 w-5 text-orange-600')
+                                    {{ $money($product->latestPrice->amount) }}
+                                </span>
                             </dd>
                         </dl>
                     </div>
                     <div class="border-t border-gray-200">
                         <div class="-mt-px flex">
-                            <div class="w-0 flex-1 flex border-2 border-green-500">
+                            <div class="w-0 flex-1 flex border-2 border-green-500 hover:bg-green-500 group">
                                 <a wire:click="addToCart({{ $product->id }})" href="#"
-                                    class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-br-lg hover:text-gray-500 focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150">
-                                    @svg('heroicon-s-shopping-cart', 'w-5 h-5 text-orange-600')
+                                    class="relative w-0 flex-1 inline-flex items-center justify-center py-4 text-sm leading-5 text-gray-700 font-medium border border-transparent rounded-br-lg group-hover:text-white focus:outline-none focus:shadow-outline-blue focus:border-blue-300 focus:z-10 transition ease-in-out duration-150">
+                                    @svg('heroicon-s-shopping-cart', 'w-5 h-5 text-orange-600 group-hover:text-white')
                                     <span class="ml-3">{{ __('Buy') }}</span>
                                 </a>
                             </div>

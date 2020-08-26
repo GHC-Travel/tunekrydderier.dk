@@ -4,14 +4,14 @@ namespace App\StorableEvents;
 
 use Spatie\EventSourcing\StoredEvents\ShouldBeStored;
 
-class ProductWasAddedToCart extends ShouldBeStored
+class ProductWasRemovedFromCart extends ShouldBeStored
 {
     public int $productId;
     public int $cost;
     public string $currency;
 
     /**
-     * ProductWasAddedToCart constructor.
+     * ProductWasRemovedFromCart constructor.
      * @param int $productId
      * @param int $cost
      * @param string $currency

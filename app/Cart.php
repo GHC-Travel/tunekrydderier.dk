@@ -2,33 +2,20 @@
 
 namespace App;
 
+use App\Aggregates\CartAggregate;
+use App\Contracts\CurrentCart;
 use App\Enums\CartStatus;
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Support\Facades\Auth;
-use Illuminate\Support\Facades\Session;
 
-class Cart extends Model
+class Cart extends Model implements CurrentCart
 {
+    protected $guarded = [];
+
     protected $casts = [
         'status' => CartStatus::class,
         'abandoned_at' => 'timestamp',
         'purchased_at' => 'timestamp'
     ];
-
-    public static function forCurrentUser(string $aggregateUuid): Cart
-    {
-        if (Session::has('cart_id')) {
-            return static::findOrFail(
-                Session::get('cart_id')
-            );
-        }
-
-        return tap(Cart::create([
-            'status' => CartStatus::FRESH,
-            'customer_id' => Auth::id(),
-            'event_uuid' => $aggregateUuid,
-        ]), fn ($cart) => Session::put('cart_id', $cart->id));
-    }
 
     public function customer()
     {
@@ -45,19 +32,47 @@ class Cart extends Model
         return $this->hasMany(CartItem::class);
     }
 
-    public function addItem(Product $product, int $quantity = 1)
+    public function aggregateRoot(): CartAggregate
+    {
+        return CartAggregate::retrieve($this->event_uuid);
+    }
+
+    public function addItem(Product $product)
     {
         $itemsQuery = $this->items()->where('event_uuid', $this->event_uuid)->where('product_id', $product->id);
 
         if ($itemsQuery->exists()) {
-            $itemsQuery->increment('quantity', $quantity);
-            $itemsQuery->increment('cost', $product->latestPrice->amount * $quantity);
+            $itemsQuery->increment('quantity', 1);
+            $itemsQuery->increment('cost', (int)$product->latestPrice->amount);
         } else {
             $this->items()->create([
+                // 'quantity' => 1,
                 'product_id' => $product->id,
                 'cost' => $product->latestPrice->amount,
                 'event_uuid' => $this->event_uuid,
             ]);
+        }
+
+        return $this;
+    }
+
+    public function removeItem(Product $product)
+    {
+        $item = $this
+            ->items()
+            ->where('event_uuid', $this->event_uuid)
+            ->where('product_id', $product->id)
+            ->first();
+
+        if (!$item) {
+            return null;
+        }
+
+        if ($item->quantity > 1) {
+            $item->decrement('quantity', 1);
+            $item->decrement('cost', (int)$product->latestPrice->amount);
+        } else {
+            $item->delete();
         }
 
         return $this;
