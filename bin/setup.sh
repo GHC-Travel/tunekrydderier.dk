@@ -1,4 +1,10 @@
 #!/usr/bin/env bash
+
+if [  -n "$(uname -a | grep Ubuntu)" ]; then
+	echo "Ubuntu detected, installing dependencies..."
+	sudo apt install php-cli php-mysql php-mbstring php-xml mariadb-server
+fi
+
 composer install
 npm install
 
@@ -16,9 +22,9 @@ sed -i "s/DB_PASSWORD=.*/DB_PASSWORD=${DB_PASSWORD}/ig" .env
 sed -i "s/DB_DATABASE=.*/DB_DATABASE=${DB_DATABASE}/ig" .env
 
 php artisan key:generate
-npm run dev
 php artisan migrate:fresh --seed
 
+npm run dev
 shopt -s nocasematch
 
 read -p 'Run server? [y/n]' runServer
