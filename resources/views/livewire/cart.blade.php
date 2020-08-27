@@ -1,4 +1,4 @@
-<div wire:poll x-data="{ visible: false }">
+<div wire:poll.5000ms x-data="{ visible: false }">
     <button class="inline-flex hover:text-orange" @click="visible = !visible">
         @svg('heroicon-s-shopping-cart', 'w-6 h-6')
         {{ $money($cart->total_cost) }}

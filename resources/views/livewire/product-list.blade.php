@@ -18,19 +18,19 @@
 
     <div
         class="bg-gray-50 -ml-4 -mt-2 flex justify-around flex-wrap sm:flex-no-wrap px-4 py-5 sm:px-6 border-b border-gray-200">
-        <div class="ml-4 mt-2 flex-shrink-0">
+        <div class="w-full max-w-xl ml-4 mt-2 flex-shrink-0">
             <div class="relative flex-grow focus-within:z-10">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-products-none">
                     @svg('heroicon-s-selector', 'text-orange-600 w-6 h-6')
                 </div>
 
                 @livewire('search-select', [
-                'items' => $categories->toArray()
+                'options' => $categories
                 ])
             </div>
         </div>
 
-        <div class="ml-4 mt-2 flex-shrink-0">
+        <div class="w-full max-w-xl ml-4 mt-2 flex-shrink-0">
             <div class="relative flex-grow focus-within:z-10 border-b border-orange-600">
                 <div class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-products-none">
                     @svg('heroicon-s-search', 'text-orange-600 w-6 h-6')

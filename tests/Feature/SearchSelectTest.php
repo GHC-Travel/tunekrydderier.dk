@@ -3,6 +3,8 @@
 namespace Tests\Feature;
 
 use App\Http\Livewire\SearchSelect;
+use App\User;
+use Illuminate\Database\Eloquent\Collection;
 use Livewire\Livewire;
 use Tests\TestCase;
 

@@ -19,8 +19,11 @@ class ProductList extends Component
      * @var Cart|CurrentCart
      */
     public $cart;
+    protected array $categories = [];
+    protected array $categorySearchResults = [];
 
     protected $listeners = [
+        'search' => 'searchCategories',
         'select' => 'selectCategory',
         'productAddedToCart' => '$refresh',
         'productStockHit' => 'showProductOutOfStockAlert',
@@ -30,11 +33,18 @@ class ProductList extends Component
     public function mount(CurrentCart $cart)
     {
         $this->cart = $cart;
+        $this->categories = ProductCategory::pluck('name')->toArray();
+        $this->categorySearchResults = $this->categories;
     }
 
     public function selectCategory($category)
     {
         $this->category = $category;
+    }
+
+    public function searchCategories($search)
+    {
+        $this->categorySearchResults = preg_grep("/^{$search}/i", $this->categories);
     }
 
     public function showProductOutOfStockAlert($productId)
@@ -57,13 +67,13 @@ class ProductList extends Component
     public function render()
     {
         $query = filled($this->category)
-            ? Product::with('latestPrice')->whereHas('category', fn($category) => $category->where('name', $this->category))
+            ? Product::with('latestPrice')->whereHas('category', fn ($category) => $category->where('name', $this->category))
             : Product::with('latestPrice');
 
         $query->where('stock', '>', 0);
 
         return view('livewire.product-list', [
-            'categories' => ProductCategory::pluck('name'),
+            'categories' => $this->categorySearchResults,
 
             'products' => filled($this->search)
                 ? $query->search($this->search)->paginate()

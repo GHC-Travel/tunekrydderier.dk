@@ -2,44 +2,29 @@
 
 namespace App\Http\Livewire;
 
-use Illuminate\Support\Arr;
 use Livewire\Component;
-use function array_combine;
-use function array_keys;
-use function array_values;
-use function collect;
 use function filled;
-use function preg_grep;
 
 class SearchSelect extends Component
 {
     public bool $visible = false;
-
-    public $items = [];
     public $options = [];
     public $selected = null;
     public string $search = '';
+    public ?string $optionView = null;
+    public ?string $selectedView = null;
 
-    public function mount($items)
+    public function mount($options, $optionView = null, $selectedView = null)
     {
-        $this->items = Arr::isAssoc($items)
-            ? $items
-            : array_combine(array_values($items), $items);
-
-        $this->options = $this->items;
+        $this->options = $options;
+        $this->optionView = $optionView;
+        $this->selectedView = $selectedView;
     }
 
     public function updatedSearch()
     {
         if (filled($this->search)) {
-            $this->options = collect(
-                preg_grep("/^{$this->search}/i", array_keys($this->items)),
-            )->flatMap(fn($key) => [$this->items[$key] => $key])
-                ->flip()
-                ->merge(preg_grep("/^{$this->search}/i", $this->items))
-                ->toArray();
-        } else {
-            $this->options = $this->items;
+            $this->emitUp('search', $this->search);
         }
     }
 

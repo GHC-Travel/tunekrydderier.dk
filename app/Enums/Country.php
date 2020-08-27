@@ -5,6 +5,9 @@ namespace App\Enums;
 use BenSampo\Enum\Contracts\LocalizedEnum;
 use BenSampo\Enum\Enum;
 
+/**
+ * @method static static DNK()
+ */
 final class Country extends Enum implements LocalizedEnum
 {
   const DNK = 'Denmark';

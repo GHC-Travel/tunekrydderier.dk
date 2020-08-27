@@ -208,28 +208,30 @@
                 </p>
             </div>
             <div class="mt-6 sm:mt-5">
-                <div class="flex items-center">
-                    <input id="push_everything" name="push_notifications" type="radio"
-                           class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out">
-                    <label for="push_everything" class="ml-3">
-                        <span class="block text-sm leading-5 font-medium text-gray-700">Everything</span>
-                    </label>
-                </div>
-                <div class="mt-4 flex items-center">
-                    <input id="push_email" name="push_notifications" type="radio"
-                           class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out">
-                    <label for="push_email" class="ml-3">
-                        <span class="block text-sm leading-5 font-medium text-gray-700">Same as email</span>
-                    </label>
-                </div>
-                <div class="mt-4 flex items-center">
-                    <input id="push_nothing" name="push_notifications" type="radio"
-                           class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out">
-                    <label for="push_nothing" class="ml-3">
-                        <span class="block text-sm leading-5 font-medium text-gray-700">No push notifications</span>
-                    </label>
-                </div>
+                @foreach ($deliveryProviders as $deliveryProvider)
+            <div class="flex items-center {{ $loop->first ? '' : 'mt-4' }}">
+                        <input 
+                            wire:model="deliveryProviderId"
+                            value="{{ $deliveryProvider->id }}"
+                            id="{{ $deliveryProvider->input_id }}" 
+                            name="deliveryProvider" 
+                            type="radio"
+                            class="form-radio h-4 w-4 text-indigo-600 transition duration-150 ease-in-out"
+                        >
+                        <label for="{{ $deliveryProvider->input_id }}" class="ml-3">
+                        <span class="block text-sm leading-5 font-medium text-gray-700">{{ $deliveryProvider->name }}</span>
+                        </label>
+                    </div>   
+                @endforeach
             </div>
+
+            @if($deliveryProviderAddresses->isNotEmpty())
+                <livewire:search-select 
+                    :options="$deliveryProviderAddresses"
+                    optionView="partials.delivery-address-option"
+                    selectedView="partials.delivery-address"
+                />
+            @endif
         </div>
 
         <div class="mt-8 border-t border-gray-200 pt-5">

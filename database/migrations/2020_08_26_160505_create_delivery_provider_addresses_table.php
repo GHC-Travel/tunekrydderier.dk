@@ -15,6 +15,13 @@ class CreateDeliveryProviderAddressesTable extends Migration
     {
         Schema::create('delivery_provider_addresses', function (Blueprint $table) {
             $table->id();
+            $table
+                ->foreignId('delivery_provider_id')
+                ->constrained('delivery_providers');
+            $table->string('name');
+            $table->string('address');
+            $table->string('city');
+            $table->string('provider_id')->nullable();
             $table->timestamps();
         });
     }
