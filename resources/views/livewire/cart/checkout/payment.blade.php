@@ -10,191 +10,137 @@
                 </p>
             </div>
             <div class="mt-6 sm:mt-5">
-                <div
-                    class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:border-t sm:border-gray-200 sm:pt-5">
-                    <label for="address_type"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                        {{ __('Address type') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <select wire:model="addressType"
-                                    id="address_type"
-                                    class="block form-select w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                                    autocomplete="off"
-                            >
-                                @foreach($addressTypes as $addressType => $value)
-                                    <option value="{{ $value }}">{{ $addressType }}</option>
-                                @endforeach
-                            </select>
-                        </div>
-                    </div>
-                </div>
+                <x-form-field class="mt-6">
+                     <x-slot name='label'>
+                          {{ __('Address type') }}
+                     </x-slot>
+                
+                    <x-input.select wire:model.lazy='addressType' autocomplete="off">
+                        @foreach($addressTypes as $addressType => $value)
+                            <option value="{{ $value }}">{{ $addressType }}</option>
+                        @endforeach
+                    </x-input.select>
+                </x-form-field>
 
+                <x-form-field class="mt-6">
+                    <x-slot name='label'>
+                    {{ __('Full name') }}
+                    </x-slot>
+                    
+                    <x-input.text
+                        wire:model.lazy='fullName' 
+                        autocomplete="name"
+                        aria-autocomplete="both"
+                    />
+                </x-form-field>
 
-                <div
-                    class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="full_name" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                        {{ __('Full name') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg flex border-b border-orange-600">
-                            <input wire:model="fullName"
-                                   id="full_name"
-                                   autocomplete="name"
-                                   aria-autocomplete="both"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                            >
-                        </div>
-                    </div>
-                </div>
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
+                        {{ __('Street Address') }}
+                    </x-slot>
 
-                <div
-                    class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="street_address"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                        {{ __('Street address') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="streetAddress"
-                                   id="street_address"
-                                   autocomplete="street-address"
-                                   aria-autocomplete="both"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none">
-                        </div>
-                    </div>
-                </div>
+                    <x-input.text
+                        wire:model.lazy='streetAddress'
+                        autocomplete="street-address"
+                        aria-autocomplete="both"
+                    />
+                </x-form-field>
 
-                <div class="mt-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="zipCode"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                        {{ __('Zip Code') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="zip"
-                                   id="zipCode"
-                                   autocomplete="postal-code"
-                                   aria-autocomplete="both"
-                                   type="number"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                            >
-                        </div>
-                    </div>
-                </div>
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
+                        {{ __('Postal') }}
+                    </x-slot>
 
-                <div
-                    class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="city"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    <x-input.number
+                        wire:model.lazy="zip"
+                        id="zipCode"
+                        autocomplete="postal-code"
+                        aria-autocomplete="both"
+                    />
+                </x-form-field>
+
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
                         {{ __('City') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="city"
-                                   id="city"
-                                   autocomplete="city"
-                                   aria-autocomplete="both"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                                   list="cities"
-                            >
+                    </x-slot>
 
-                            <datalist id="cities">
-                                @foreach($cities as $city)
-                                    <option value="{{ $city->city }}"></option>
-                                @endforeach
-                            </datalist>
-                        </div>
-                    </div>
-                </div>
-
-                <div
-                    class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="country"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
-                        {{ __('Country') }}
-                    </label>
-                    <div class="max-w-lg mt-1 sm:mt-0 sm:col-span-2 border-b border-orange-600">
-                        <select wire:model="country"
-                                id="country"
-                                class="block form-select w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                                autocomplete="off"
-                        >
-                            @foreach($countries as $name => $alpha3)
-                                <option value="{{ $alpha3 }}">{{ $name }}</option>
+                    <x-input.text
+                        wire:model.lazy="city"
+                        id="city"
+                        list="cities"
+                    >
+                        <datalist id="cities">
+                            @foreach($cities as $city)
+                                <option value="{{ $city->city }}"></option>
                             @endforeach
-                        </select>
-                    </div>
-                </div>
+                        </datalist>
+                    </x-input.text>
+                </x-form-field>
 
-                <div class="mt-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="phone"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
+                        {{ __('Country') }}
+                    </x-slot>
+
+                    <x-input.select
+                        wire:model.lazy="country"
+                        id="country"
+                    >
+                        @foreach($countries as $name => $alpha3)
+                        <option value="{{ $alpha3 }}">{{ $name }}</option>
+                        @endforeach
+                    </x-input.select>
+                </x-form-field>
+
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
                         {{ __('Phone') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="phone"
-                                   id="phone"
-                                   autocomplete="tel"
-                                   aria-autocomplete="both"
-                                   type="text"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                            >
-                        </div>
-                    </div>
-                </div>
+                    </x-slot>
 
-                <div class="mt-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="email"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    <x-input.tel
+                        wire:model.lazy="phone"
+                        id="phone"
+                    />
+                </x-form-field>
+
+
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
                         {{ __('E-Mail') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="email"
-                                   id="email"
-                                   autocomplete="email"
-                                   aria-autocomplete="both"
-                                   type="email"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                            >
-                        </div>
-                    </div>
-                </div>
+                    </x-slot>
 
-                <div class="mt-6 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="email_confirmation"
-                           class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    <x-input.email
+                        wire:model.lazy="email"
+                        id="email"
+                    />
+                </x-form-field>
+
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
                         {{ __('Confirm E-Mail') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg border-b border-orange-600">
-                            <input wire:model="emailConfirmation"
-                                   id="email_confirmation"
-                                   autocomplete="email"
-                                   aria-autocomplete="both"
-                                   type="email"
-                                   class="form-input block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 bg-transparent border-none"
-                                   placeholder="{{ __('Repeat E-Mail') }}"
-                            >
-                        </div>
-                    </div>
-                </div>
+                    </x-slot>
 
-                <div class="mt-6 sm:mt-5 sm:grid sm:grid-cols-3 sm:gap-4 sm:items-start sm:pt-5">
-                    <label for="message" class="block text-sm font-medium leading-5 text-gray-700 sm:mt-px sm:pt-2">
+                    <x-input.email
+                        wire:model.lazy="emailConfirmation"
+                        id="email_confirmation"
+                        placeholder="{{ __('Repeat E-Mail') }}"
+                    />
+                </x-form-field>
+
+                <x-form-field class="mt-6">
+                    <x-slot name="label">
                         {{ __('Message to the vendor') }}
-                    </label>
-                    <div class="mt-1 sm:mt-0 sm:col-span-2">
-                        <div class="max-w-lg flex border-b border-orange-600">
-                            <textarea id="message" rows="3"
-                                      class="form-textarea block w-full transition duration-150 ease-in-out sm:text-sm sm:leading-5 border-none bg-transparent"></textarea>
-                        </div>
-                        <p class="mt-2 text-sm text-gray-500">{{ __('Anything we should be aware of when handling your purchase?') }}</p>
-                    </div>
-                </div>
+                    </x-slot>
+
+                    <x-input.textarea
+                        wire:model.lazy="message"
+                        id="message" 
+                    />
+
+                    <x-slot name="helpText">
+                        {{ __('Anything we should be aware of when handling your purchase?') }}
+                    </x-slot>
+                </x-form-field>
             </div>
         </div>
 
@@ -211,7 +157,7 @@
                 @foreach ($deliveryProviders as $deliveryProvider)
             <div class="flex items-center {{ $loop->first ? '' : 'mt-4' }}">
                         <input 
-                            wire:model="deliveryProviderId"
+                            wire:model.lazy="deliveryProviderId"
                             value="{{ $deliveryProvider->id }}"
                             id="{{ $deliveryProvider->input_id }}" 
                             name="deliveryProvider" 
@@ -236,18 +182,18 @@
 
         <div class="mt-8 border-t border-gray-200 pt-5">
             <div class="flex justify-end">
-            <span class="inline-flex rounded-md shadow-sm">
-                <button type="button"
-                        class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
-                Cancel
-                </button>
-            </span>
+                <span class="inline-flex rounded-md shadow-sm">
+                    <button type="button"
+                            class="py-2 px-4 border border-gray-300 rounded-md text-sm leading-5 font-medium text-gray-700 hover:text-gray-500 focus:outline-none focus:border-blue-300 focus:shadow-outline-blue active:bg-gray-50 active:text-gray-800 transition duration-150 ease-in-out">
+                    Cancel
+                    </button>
+                </span>
                 <span class="ml-3 inline-flex rounded-md shadow-sm">
-                <button type="submit"
-                        class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
-                  Save
-                </button>
-          </span>
+                    <button type="submit"
+                            class="inline-flex justify-center py-2 px-4 border border-transparent text-sm leading-5 font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-500 focus:outline-none focus:border-indigo-700 focus:shadow-outline-indigo active:bg-indigo-700 transition duration-150 ease-in-out">
+                    Save
+                    </button>
+                </span>
             </div>
         </div>
     </div>
