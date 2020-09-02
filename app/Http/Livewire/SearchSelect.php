@@ -14,11 +14,12 @@ class SearchSelect extends Component
     public ?string $optionView = null;
     public ?string $selectedView = null;
 
-    public function mount($options, $optionView = null, $selectedView = null)
+    public function mount($options, $optionView = null, $selectedView = null, bool $visible = false)
     {
         $this->options = $options;
         $this->optionView = $optionView;
         $this->selectedView = $selectedView;
+        $this->visible = $visible;
     }
 
     public function updatedSearch()

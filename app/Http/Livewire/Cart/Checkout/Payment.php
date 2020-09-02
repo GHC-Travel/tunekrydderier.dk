@@ -11,6 +11,8 @@ use BenSampo\Enum\Rules\EnumValue;
 use Illuminate\Support\Collection;
 use Illuminate\Support\Fluent;
 use Illuminate\Validation\Rule;
+use Illuminate\Contracts\View\View;
+use Illuminate\Validation\ValidationException;
 use Livewire\Component;
 use function collect;
 use function resolve;
@@ -47,9 +49,9 @@ class Payment extends Component
         $this->resolveCities();
     }
 
-    public function updated($field)
+    public function rules(): array
     {
-        $this->validateOnly($field, [
+        return [
             'addressType' => ['required', new EnumValue(AddressType::class)],
             'fullName' => ['required', 'string', 'max:255'],
             'streetAddress' => ['required', 'string', 'max:255'],
@@ -61,8 +63,13 @@ class Payment extends Component
             'message' => ['nullable', 'string', 'max:255'],
 
             'deliveryProviderId' => ['required', 'exists:delivery_providers,id'],
-            'deliveryProviderAddressId' => ['nullable', Rule::exists('delivery_addresses', 'id')->where('delivery_provider_id', $this->deliveryProviderId)]
-        ]);
+            'deliveryProviderAddressId' => ['nullable', Rule::exists(DeliveryProviderAddress::class, 'id')->where('delivery_provider_id', $this->deliveryProviderId)]
+        ];
+    }
+
+    public function updated($field)
+    {
+        $this->validateOnly($field, $this->rules());
 
         switch ($field) {
             case 'country':
@@ -89,19 +96,40 @@ class Payment extends Component
         $this->deliveryProviderAddressId = $id;
     }
 
+    public function getReadyToSaveProperty(): bool
+    {
+        try {
+            $this->validate($this->rules());
+        } catch (ValidationException $e) {
+            return false;
+        }
+
+        return $this->getErrorBag()->isEmpty();
+    }
+
+    public function getReadyToSelectDeliveryProperty(): bool
+    {
+        return filled($this->city);
+    }
+
     public function render()
     {
-        return view('livewire.cart.checkout.payment', [
-            'addressTypes' => AddressType::toSelectArray(),
-            'countries' => Country::toSelectArray(),
+        return tap(view('livewire.cart.checkout.payment', [
+            'addressTypes' => AddressType::asSelectArray(),
+            'countries' => Country::asSelectArray(),
             'cities' => $this->cities,
             'deliveryProviders' => DeliveryProvider::all(),
-            'deliveryProviderAddresses' => DeliveryProviderAddress::query()
-                ->where('delivery_provider_id', $this->deliveryProviderId)
-                ->where('city', $this->city)
-                ->search($this->search)
-                ->get()
-        ]);
+        ]), function (View $view) {
+            if ($this->deliveryProviderId && filled($this->city)) {
+                $addresses = DeliveryProviderAddress::query()
+                    ->where('delivery_provider_id', $this->deliveryProviderId)
+                    ->where('city', $this->city)
+                    ->search($this->search)
+                    ->get();
+
+                $view->with('deliveryProviderAddresses', $addresses);
+            }
+        });
     }
 
     public function resolveCities(): void

@@ -16,7 +16,6 @@ class DeliveryProviderSeeder extends Seeder
         $GLSPakkeshopSlagelse = DeliveryProvider::create([
             'name' => 'GLS Pakkeshop',
             'country' => Country::DNK()->key,
-            'city' => 'Slagelse',
             'price' => 29,
             'currency' => 'DKK'
         ]);

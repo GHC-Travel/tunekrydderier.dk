@@ -21,7 +21,7 @@ trait TracksCurrency
             'currency' => ['except' => '']
         ], $this->updatesQueryString);
 
-        View::share('money', fn (int $amount) => Money::convert($amount)->to($this->currency)->format());
+        View::share('money', fn ($amount) => Money::convert((int)$amount)->to($this->currency)->format());
     }
 
     public function updatedCurrency()
